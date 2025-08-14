@@ -1,45 +1,251 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!DOCTYPE html><html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>MetaToRI Login</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>복리매매일지 – 성공은 목표다</title>
+<meta name="description" content="복리매매일지 | 성공은 목표다. 종목 추가/목록, 체크 기반 목표 진행 관리. 다크 네온 + 파티클 배경." />
+<style>
+  /* ================== THEME (Dark + Neon) ================== */
+  *,*::before,*::after{ box-sizing:border-box; }
+  :root{
+    --bg:#0b0f14;           /* page bg */
+    --panel:#0f141c;        /* card bg */
+    --border:#1f2a37;       /* subtle lines */
+    --fg:#e5e7eb;           /* text */
+    --muted:#94a3b8;        /* muted */
+    --neon:#22d3ee;         /* cyan */
+    --neon2:#a78bfa;        /* violet */
+    --danger:#ef4444;
+    --good:#10b981;
+    --radius:16px;
+    --shadow:0 10px 40px rgba(34,211,238,0.08), 0 0 0 1px rgba(167,139,250,0.08) inset;
+  }
+  html,body{ margin:0; background:linear-gradient(180deg,#0a0d12 0%,#0c1118 40%,#0b0f14 100%); color:var(--fg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif; line-height:1.65; overflow-x:hidden; }/* Background Particles */ #bg{ position:fixed; inset:0; z-index:-1; }
+
+.wrap{ max-width:980px; margin:0 auto; padding:86px 14px 110px; }
+
+/* ================== HEADER (fixed) ================== */ .header{ position:fixed; top:0; left:0; right:0; z-index:50; backdrop-filter:saturate(160%) blur(8px); background:rgba(11,15,20,.72); border-bottom:1px solid rgba(34,211,238,.16); box-shadow:0 6px 30px rgba(0,0,0,.25); } .header .inner{ max-width:980px; margin:0 auto; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; } .brand{ display:flex; align-items:center; gap:10px; } .title{ font-size:18px; font-weight:800; letter-spacing:.2px; text-shadow:0 0 10px rgba(34,211,238,.55),0 0 20px rgba(167,139,250,.35); } .slogan{ font-size:12px; color:var(--muted); } .btn{ appearance:none; border:1px solid rgba(34,211,238,.35); background:transparent; color:var(--fg); padding:8px 12px; border-radius:10px; font-size:14px; cursor:pointer; box-shadow:0 0 0 2px rgba(34,211,238,.06) inset; }
+
+/* ================== PANELS ================== */ .panel{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); margin:14px 0; } .panel h2{ margin:0 0 10px; font-size:16px; letter-spacing:.2px; } label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; } input[type="text"], input[type="number"]{ width:100%; padding:12px 12px; border:1px solid #1b2430; border-radius:12px; background:#0b1117; color:var(--fg); box-shadow:0 0 0 2px rgba(34,211,238,.05) inset; } .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:10px; } .col-12{ grid-column:span 12; } .col-6{ grid-column:span 6; }
+
+/* ================== HOME: LIST ================== / .list{ display:flex; flex-direction:column; gap:10px; } / 한 줄: 이름 | 게이지 | %  + 아래 버튼줄 */ .item{ display:grid; grid-template-columns: 1fr minmax(220px, 1fr) 64px; gap:12px; align-items:center; padding:12px; background:#0b1117; border:1px solid #1b2430; border-radius:12px; box-shadow:var(--shadow); } .name{ font-weight:700; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .gauge{ height:10px; border-radius:999px; background:#0d1b29; overflow:hidden; position:relative; margin:0 auto; width:clamp(180px, 60%, 360px); } .gauge span{ position:absolute; left:0; top:0; bottom:0; width:0; background:linear-gradient(90deg,#22d3ee,#a78bfa); box-shadow:0 0 12px rgba(34,211,238,.5); } .pct{ font-size:12px; color:#94a3b8; text-align:right; width:64px; font-variant-numeric:tabular-nums; } .rowBtns{ grid-column:1 / -1; display:flex; gap:10px; justify-content:flex-end; } .rowBtn{ flex:0 0 auto; min-width:84px; border:1px solid rgba(34,211,238,.3); color:#e5e7eb; background:transparent; border-radius:10px; font-size:13px; padding:10px; cursor:pointer; } .rowBtn.danger{ border-color:rgba(239,68,68,.55); color:#ff9aa9; }
+
+/* ================== DETAIL ================== */ .stickySub{ position:sticky; top:56px; background:rgba(11,15,20,.85); border-bottom:1px solid rgba(34,211,238,.16); padding:10px 12px; z-index:30; display:flex; align-items:center; gap:10px; justify-content:space-between; } .kpis{ display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; } .kpi{ background:#0b1117; border:1px solid #1b2430; border-radius:12px; padding:10px; text-align:center; } .kpi .lab{ color:#94a3b8; font-size:11px; } .kpi .val{ font-size:16px; font-weight:800; } .progress{ height:10px; border-radius:999px; background:#0d1b29; overflow:hidden; margin-top:10px; } .progress span{ display:block; height:100%; width:0; background:linear-gradient(90deg,#22d3ee,#a78bfa); box-shadow:0 0 14px rgba(34,211,238,.5); }
+
+table{ width:100%; border-collapse:separate; border-spacing:0; font-size:13px; } thead th{ position:sticky; top:112px; background:#0b1117; z-index:1; border-bottom:1px solid #1b2430; color:#cbd5e1; } th, td{ padding:10px 8px; border-bottom:1px solid #16202b; } tr.checked{ background:#071a12; box-shadow: inset 3px 0 0 var(--good); } td.right, th.right{ text-align:right; }
+
+/* Back to top */ .toTop{ position:fixed; right:16px; bottom:18px; z-index:60; border-radius:50%; width:46px; height:46px; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#22d3ee,#a78bfa); color:#001017; border:0; box-shadow:0 10px 30px rgba(34,211,238,.35); cursor:pointer; }
+
+/* ================== VIEWS ================== */ .view{ display:none; } .view.active{ display:block; }
+
+/* ================== RESPONSIVE ================== */ @media (max-width:720px){ .wrap{ padding:78px 12px 110px; } .grid .col-6{ grid-column:span 12; } .kpis{ grid-template-columns: repeat(2, 1fr); } thead th{ top:140px; } .item{ grid-template-columns: 1fr minmax(160px,1fr) 54px; } .gauge{ width:clamp(140px, 60%, 280px); } } </style>
+
 </head>
 <body>
-  <h2>로그인 / 회원가입</h2>
-  <input id="email" type="email" placeholder="이메일"><br>
-  <input id="password" type="password" placeholder="비밀번호(6자 이상)"><br>
-  <button id="signup">회원가입</button>
-  <button id="login">로그인</button>
-  <p id="message" style="color:red;"></p>
+  <canvas id="bg"></canvas>
+  <!-- Fixed Header -->
+  <div class="header">
+    <div class="inner">
+      <div class="brand">
+        <div class="title">복리매매일지</div>
+        <div class="slogan">성공은 목표다</div>
+      </div>
+      <div class="auth">
+        <button class="btn" id="btnAuth">로그인</button>
+      </div>
+    </div>
+  </div>  <div class="wrap">
+    <!-- ================== HOME VIEW ================== -->
+    <div id="viewHome" class="view active">
+      <!-- 종목 추가 -->
+      <section class="panel">
+        <h2>종목 추가</h2>
+        <div class="grid">
+          <div class="col-12">
+            <label>종목명</label>
+            <input id="inName" type="text" placeholder="예: KRW-XRP" />
+          </div>
+          <div class="col-6">
+            <label>시작가</label>
+            <input id="inSeed" type="number" value="100000" />
+          </div>
+          <div class="col-6">
+            <label>목표가</label>
+            <input id="inGoal" type="number" value="10000000" />
+          </div>
+          <div class="col-6">
+            <label>퍼센트(거래당)</label>
+            <input id="inPct" type="number" step="0.1" value="10" />
+          </div>
+          <div class="col-12" style="display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+            <button class="btn" id="btnAdd">추가하기</button>
+          </div>
+        </div>
+      </section><!-- 종목 목록 -->
+  <section class="panel">
+    <h2>종목 목록</h2>
+    <div id="assetList" class="list"></div>
+  </section>
+</div>
 
-  <script type="module">
-    import { auth } from './firebase.js';
-    import { createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-      from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+<!-- ================== DETAIL VIEW ================== -->
+<div id="viewDetail" class="view">
+  <div class="stickySub">
+    <div class="brand">
+      <div class="title" id="dTitle">-</div>
+    </div>
+    <button class="btn" id="btnBack">홈가기</button>
+  </div>
 
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const msg = document.getElementById("message");
+  <section class="panel" style="margin-top:10px;">
+    <div class="kpis">
+      <div class="kpi"><div class="lab">목표수</div><div class="val" id="dSteps">-</div></div>
+      <div class="kpi"><div class="lab">완료수</div><div class="val" id="dDone">0</div></div>
+      <div class="kpi"><div class="lab">진행률</div><div class="val" id="dRate">0%</div></div>
+      <div class="kpi"><div class="lab">현재가</div><div class="val" id="dCurrent">-</div></div>
+      <div class="kpi"><div class="lab">목표가</div><div class="val" id="dGoal">-</div></div>
+    </div>
+    <div class="progress"><span id="dBar"></span></div>
+  </section>
 
-    document.getElementById("signup").addEventListener("click", async () => {
-      try {
-        await createUserWithEmailAndPassword(auth, email.value, password.value);
-        msg.style.color = "green";
-        msg.textContent = "회원가입 성공! 로그인해주세요.";
-      } catch (error) {
-        msg.textContent = error.message;
-      }
+  <section class="panel">
+    <h2>단계표</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>기준금</th>
+          <th class="right">수익금(증가액)</th>
+          <th class="right">수익률</th>
+          <th class="right">체크</th>
+        </tr>
+      </thead>
+      <tbody id="dBody"></tbody>
+    </table>
+  </section>
+</div>
+
+  </div><button class="toTop" id="toTop" title="위로가기">▲</button>
+
+<!-- Simple Auth Modal --><div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:70; align-items:center; justify-content:center;">
+  <div style="background:#0b1117; border:1px solid #1b2430; border-radius:16px; padding:16px; width:min(92vw,420px); box-shadow:0 30px 80px rgba(0,0,0,.45);">
+    <h3 style="margin:0 0 10px;">닉네임 로그인</h3>
+    <label>닉네임을 입력하세요 (기존 닉네임은 데이터 불러옵니다)</label>
+    <input id="nickInput" type="text" placeholder="예: Tori" />
+    <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:10px;">
+      <button class="btn" id="authCancel">취소</button>
+      <button class="btn" id="authConfirm">로그인</button>
+    </div>
+  </div>
+</div><script>
+  /* ================== Utilities ================== */
+  const KEY='neon_goal_tracker_v3';
+  const USERS='neon_goal_tracker_users'; // { nickname: stateJSON }
+  const $=s=>document.querySelector(s);
+  const $$=s=>document.querySelectorAll(s);
+  const fmt=v=> isNaN(v)?'-':Number(v).toLocaleString(undefined,{maximumFractionDigits:0});
+
+  // ================== State ==================
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}} }
+  function save(x){ localStorage.setItem(KEY, JSON.stringify(x)); syncUser(); }
+  function loadUsers(){ try{return JSON.parse(localStorage.getItem(USERS))||{}}catch(e){return {}} }
+  function saveUsers(u){ localStorage.setItem(USERS, JSON.stringify(u)); }
+
+  let S=load(); if(!S.assets) S={assets:{}, current:null, nick:null};
+
+  function ensure(){ if(!Object.keys(S.assets).length){ S.assets['KRW-BTC']={seed:100000, goal:10000000, pct:10, checks:{}}; S.current='KRW-BTC'; save(S);} }
+
+  // Per-nickname sync
+  function syncUser(){ if(!S.nick) return; const users=loadUsers(); users[S.nick]=S; saveUsers(users); renderAuth(); }
+  function loadByNick(nick){ const users=loadUsers(); if(users[nick]){ S=users[nick]; } else { S={assets:{}, current:null, nick}; ensure(); }
+    save(S); renderAuth(); drawList(); }
+
+  // ================== Math ==================
+  const stepsNeed=(seed,goal,pct)=>{ if(seed<=0||goal<=seed||pct<=-100) return 0; const r=1+pct/100; return Math.ceil(Math.log(goal/seed)/Math.log(r)); };
+  const stepValue=(seed,pct,n)=> seed * Math.pow(1+pct/100, n);
+
+  // ================== Views ==================
+  function show(home=true){ $('#viewHome').classList.toggle('active',home); $('#viewDetail').classList.toggle('active',!home); }
+
+  // ================== Home list ==================
+  function drawList(){
+    const box=$('#assetList'); box.innerHTML='';
+    Object.entries(S.assets).forEach(([name,a])=>{
+      const steps=stepsNeed(a.seed,a.goal,a.pct); const done=Object.values(a.checks).filter(Boolean).length; const rate=steps?Math.round(done/steps*100):0;
+      const row=document.createElement('div'); row.className='item';
+      row.innerHTML=`
+        <div class="name">${name}</div>
+        <div class="gauge"><span style="width:${rate}%"></span></div>
+        <div class="pct">${rate}%</div>
+        <div class="rowBtns">
+          <button class="rowBtn" data-edit="${name}">수정</button>
+          <button class="rowBtn danger" data-del="${name}">삭제</button>
+          <button class="rowBtn" data-open="${name}">자세히</button>
+        </div>`;
+      box.appendChild(row);
     });
 
-    document.getElementById("login").addEventListener("click", async () => {
-      try {
-        await signInWithEmailAndPassword(auth, email.value, password.value);
-        window.location.href = "gallery.html";
-      } catch (error) {
-        msg.textContent = "로그인 실패: " + error.message;
-      }
-    });
-  </script>
-</body>
+    // bind
+    box.querySelectorAll('[data-open]').forEach(b=> b.onclick=()=>{ S.current=b.dataset.open; save(S); openDetail(); });
+    box.querySelectorAll('[data-del]').forEach(b=> b.onclick=()=>{ const n=b.dataset.del; if(!confirm(`${n} 삭제?`)) return; delete S.assets[n]; save(S); drawList(); });
+    box.querySelectorAll('[data-edit]').forEach(b=> b.onclick=()=>{ const n=b.dataset.edit; const nn=prompt('새 종목명', n)||n; if(nn!==n){ if(S.assets[nn]) return alert('이미 존재합니다'); S.assets[nn]=S.assets[n]; delete S.assets[n]; S.current=nn; }
+      const p=parseFloat(prompt('퍼센트(거래당)', S.assets[nn].pct)); if(!isNaN(p)) S.assets[nn].pct=p;
+      const g=parseFloat(prompt('목표가', S.assets[nn].goal)); if(!isNaN(g)) S.assets[nn].goal=g;
+      const s=parseFloat(prompt('시작가', S.assets[nn].seed)); if(!isNaN(s)) S.assets[nn].seed=s;
+      save(S); drawList(); });
+  }
+
+  // ================== Detail ==================
+  function openDetail(){ show(false); renderDetail(); }
+  function renderDetail(){ const n=S.current; const a=S.assets[n]; if(!a) return; $('#dTitle').textContent=n; $('#dGoal').textContent=fmt(a.goal);
+    const steps=stepsNeed(a.seed,a.goal,a.pct); const done=Object.values(a.checks).filter(Boolean).length; const rate=steps?Math.round(done/steps*100):0;
+    $('#dSteps').textContent=steps; $('#dDone').textContent=done; $('#dRate').textContent=rate+'%';
+    const current=Math.round(stepValue(a.seed,a.pct,done)); $('#dCurrent').textContent=fmt(current);
+    $('#dBar').style.width=rate+'%';
+    const tb=$('#dBody'); tb.innerHTML='';
+    let cur=a.seed;
+    for(let i=1;i<=steps;i++){
+      const next=stepValue(a.seed,a.pct,i); const inc=next-cur; const key='s'+i; const checked=!!a.checks[key];
+      const tr=document.createElement('tr'); if(checked) tr.classList.add('checked');
+      tr.innerHTML=`
+        <td>${i}</td>
+        <td class="right">${fmt(cur)}</td>
+        <td class="right">+${fmt(inc)}</td>
+        <td class="right">${Math.round((next/a.seed-1)*100)}%</td>
+        <td class="right"><input type=\"checkbox\" data-step=\"${i}\" ${checked?'checked':''}></td>`;
+      tb.appendChild(tr); cur=next;
+    }
+    // 스크롤 점프 방지: 상세만 리렌더, 페이지 전환/스크롤 이동 없음
+    tb.querySelectorAll('input[type="checkbox"][data-step]').forEach(chk=> chk.onchange=()=>{ a.checks['s'+chk.dataset.step]=chk.checked; save(S); renderDetail(); drawList(); });
+  }
+
+  // ================== Auth/UI ==================
+  function renderAuth(){ const btn=$('#btnAuth');
+    if(S.nick){ btn.textContent=S.nick; btn.onclick=()=>{ if(confirm('로그아웃 하시겠습니까?')){ localStorage.removeItem(KEY); S={assets:{}, current:null, nick:null}; drawList(); show(true); renderAuth(); } }; }
+    else{ btn.textContent='로그인'; btn.onclick=()=>{ $('#authModal').style.display='flex'; $('#nickInput').focus(); }; }
+  }
+
+  // Modal actions
+  $('#authCancel').onclick=()=> $('#authModal').style.display='none';
+  $('#authConfirm').onclick=()=>{ const nick=$('#nickInput').value.trim(); if(!nick) return alert('닉네임 입력'); S.nick=nick; $('#authModal').style.display='none'; loadByNick(nick); show(true); };
+
+  // ================== Events ==================
+  $('#btnBack').onclick=()=> show(true);
+  $('#btnAdd').onclick=()=>{ const name=$('#inName').value.trim(); const seed=parseFloat($('#inSeed').value||0); const goal=parseFloat($('#inGoal').value||0); const pct=parseFloat($('#inPct').value||0); if(!name) return alert('종목명을 입력하세요'); if(S.assets[name]) return alert('이미 존재합니다'); if(!(seed>0&&goal>0)) return alert('시작가/목표가 확인'); S.assets[name]={seed,goal,pct,checks:{}}; S.current=name; save(S); $('#inName').value=''; drawList(); };
+  $('#toTop').onclick=()=> window.scrollTo({top:0, behavior:'smooth'});
+
+  // ================== Particles ==================
+  (function particles(){
+    const c=document.getElementById('bg'); const ctx=c.getContext('2d'); let W,H; const colors=['#22d3ee','#a78bfa','#f472b6','#34d399','#fbbf24']; let ps=[];
+    function resize(){ W= c.width = innerWidth; H = c.height = innerHeight; }
+    function spawn(){ const s=Math.random()*2+0.6; ps.push({x:Math.random()*W, y:-10, r:Math.random()*2+1.2, vy:s, vx:(Math.random()-.5)*0.3, a:Math.random()*1, c:colors[(Math.random()*colors.length)|0]}); if(ps.length>180) ps.shift(); }
+    function step(){ ctx.clearRect(0,0,W,H); for(const p of ps){ p.y+=p.vy; p.x+=p.vx; p.a*=0.998; if(p.y>H+10) { p.y=-10; p.x=Math.random()*W; p.a=1; } ctx.globalAlpha=p.a*0.85; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.c; ctx.fill(); }
+      ctx.globalAlpha=1; }
+    function loop(){ spawn(); step(); requestAnimationFrame(loop); }
+    addEventListener('resize', resize); resize(); loop();
+  })();
+
+  // ================== Init ==================
+  (function init(){ ensure(); drawList(); renderAuth(); })();
+</script></body>
 </html>
